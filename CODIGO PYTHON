@@ -1,0 +1,66 @@
+import serial
+import time
+import csv
+from time import sleep
+import curses
+screen = curses.initscr()
+curses.noecho()
+curses.cbreak()
+screen.keypad(True)
+ser = serial.Serial("/dev/ttyACM0",9600,timeout=1)
+def main(screen):
+ try:
+   while True:
+     drct = screen.getch()
+     speed = 255
+     enA = speed
+     enB = speed
+
+     if drct == curses.KEY_UP:
+        print "adelante"
+        in1 = 1
+        in2 = 0
+        in3 = 1
+        in4 = 0
+
+     elif drct ==  curses.KEY_DOWN:
+        print "atras"
+        in1 = 0
+        in2 = 1
+        in3 = 0
+        in4 = 1
+
+
+     elif drct == curses.KEY_RIGHT:
+        print "derecha"
+        in1 = 1
+        in2 = 0
+        in3 = 0
+        in4 = 1
+     elif drct == curses.KEY_LEFT:
+        print "izquierda"
+        in1 = 0
+        in2 = 1
+        in3 = 1
+        in4 = 0
+
+     else:
+        in1 = 0
+        in2 = 0
+        in3 = 0
+        in4 = 0
+
+     valList =[ str(enA) + ',' + str(in1) + ',' + str(in2) + ',' + str(in3) + ',' + str(in4) + ',' + str(enB)]
+     setString = ','.join(valList)
+     ser.write(setString)
+     time.sleep(0.1)
+
+ finally:
+     curses.nocbreak();
+     screen.keypad(0);
+     curses.echo()
+     curses.endwin()
+curses.wrapper(main)
+
+
+
